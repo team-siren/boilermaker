@@ -1,4 +1,4 @@
-// testing master pull requests
+// testing master pull request
 
 import React, {Component} from 'react'
 import * as posenet from '@tensorflow-models/posenet'
