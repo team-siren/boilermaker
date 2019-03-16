@@ -248,6 +248,7 @@ class PoseNet extends Component {
   }
 
   render() {
+    // console.log('state', this.props.state)
     const poseCapture = this.props.initialBody ? this.props.initialBody : []
 
     const loading = this.state.loading ? (
@@ -284,7 +285,8 @@ const mapStateToProps = state => {
   return {
     keypointsOnState: state.keypoints,
     intialBody: state.initialBody,
-    initialPoses: state.initialBody.length
+    initialPoses: state.initialBody.length,
+    state: state
   }
 }
 

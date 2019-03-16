@@ -7,7 +7,8 @@ class GameInit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      localInitialBody: []
+      // localInitialBody: [], //<--leave these commented out
+      // localProportions: {}  //<--they're just a reminder of state structure
     }
   }
 
@@ -17,25 +18,35 @@ class GameInit extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return !!this.props.initialBody.score
-  }
+  } /* equivalent to the ternary:
+  `return this.props.initialBody.score ? false : true`
+  meaning: if the initialBody in the global store has a score (and thus keypoints) property, no need to update
+  */
 
   componentDidUpdate() {
-    if (
-      Array.isArray(this.state.localInitialBody) &&
-      this.state.localInitialBody.length
-    ) {
+    if (!this.state.localInitialBody) {
+      //if there's no localInitialBody yet
       this.setState({
+        //load the global intialBody to the local state
         localInitialBody: this.props.initialBody
       })
-      this.calculateProportions()
+      this.calculateProportions() //and calculate its proportions
     }
   }
 
   calculateProportions(pose) {
     const initialKeypoints = this.props.initialBody.keypoints
-    console.log('initial keypoints iside calculate: ', initialKeypoints)
     this.setState({localInitialBody: initialKeypoints})
-    console.log('LIB inside calculate proportions', this.state.localInitialBody)
+    //make the local initial body the keypoints array of the intial pose
+
+    const findCoords = bodyPart => {
+      let coords
+      if (initialKeypoints[bodyPointLocations[bodyPart]]) {
+        //e.g., find whatever is at the keypoint index indicated by the the index of the bodyPart given in the official utility list
+        coords = initialKeypoints[bodyPointLocations[bodyPart]].position
+      } //else coords = {x: 0, y: 0}
+      return coords
+    }
 
     const leftEyeCoords = findCoords('leftEye')
     const leftShoulderCoords = findCoords('leftShoulder')
@@ -46,6 +57,9 @@ class GameInit extends Component {
     const leftAnkleCoords = findCoords('leftAnkle')
 
     const distanceBetween = (p1, p2) => Math.abs(p1 - p2)
+
+    //`D = √ dx^2 + dy2`, or:
+    //the distance between two x,y points is the square root of the difference between the two x coords of the points, cubed, plus the difference between the two y coords of the points, cubed. --https://www.mathopenref.com/coorddist.html
 
     const height =
       //eye to ankle
@@ -94,19 +108,19 @@ class GameInit extends Component {
       legLength
     }
 
+    if (!this.state.localProportions) {
+      //if no local proportions were recorded yet
+      this.setState({
+        ...this.state,
+        localProportions: proportions //save them to the local state...
+      })
+    }
+
+    //and send them to the global state via dispatch:
     this.props.getProportions(proportions)
   }
 
-  findCoords(bodyPart) {
-    const keypoints = this.state.localInitialBody
-    const coords = keypoints[bodyPointLocations[bodyPart]].position
-    return coords
-  }
-
   render() {
-    console.log('PROPORTIONS ON STATE: ', this.props.proportionsOnState)
-    console.log('STATE', this.props.state)
-
     return <h1>'bla'</h1>
   }
 }
