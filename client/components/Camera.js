@@ -248,7 +248,8 @@ class PoseNet extends Component {
   }
 
   render() {
-    console.log('initial body', this.props.initialBody)
+    const poseCapture = this.props.initialBody ? this.props.initialBody : []
+
     const loading = this.state.loading ? (
       <img className="loading" src="/assets/loading.gif" />
     ) : (
@@ -272,6 +273,7 @@ class PoseNet extends Component {
           <video id="videoNoShow" playsInline ref={this.getVideo} />
           {object}
           <canvas className="webcam" ref={this.getCanvas} />
+          <GameInit initialPoseCapture={poseCapture} />
         </div>
       </div>
     )
