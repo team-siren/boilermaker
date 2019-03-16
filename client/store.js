@@ -6,12 +6,20 @@ const initialState = {
 
 //action types
 const GOT_KEYPOINTS = 'GOT_KEYPOINTS'
+const GOT_INITIALBODY = 'GOT_INITIALBODY'
 
 //action creators
 export const gotKeypoints = keypoints => {
   return {
     type: GOT_KEYPOINTS,
     keypoints
+  }
+}
+
+export const recordInitialBody = pose => {
+  return {
+    type: GOT_INITIALBODY,
+    pose
   }
 }
 
@@ -22,6 +30,11 @@ const keyPointsReducer = (state = initialState, action) => {
       return {
         ...state,
         keypoints: action.keypoints
+      }
+    case GOT_INITIALBODY:
+      return {
+        ...state,
+        initialBody: action.pose
       }
     default:
       return state

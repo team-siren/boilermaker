@@ -8,7 +8,8 @@ import {
 } from './utils'
 import Object from './Object'
 import {connect} from 'react-redux'
-import {gotKeypoints} from '../store'
+import {gotKeypoints, recordInitialBody} from '../store'
+import GameInit from './GameInit'
 
 class PoseNet extends Component {
   static defaultProps = {
@@ -36,7 +37,8 @@ class PoseNet extends Component {
     super(props, PoseNet.defaultProps)
     this.state = {
       loading: true,
-      objectImage: 'https://i.gifer.com/5DYJ.gif'
+      objectImage: 'https://i.gifer.com/5DYJ.gif',
+      posesRecorded: false
     }
   }
 
@@ -181,8 +183,18 @@ class PoseNet extends Component {
         canvasContext.restore()
       }
 
+      // function captureInitialBodyPosition(){
+      //if no initialPose has been saved on state
+      if (this.props.initialPoses === 0) {
+        //dispatch the first pose into the state
+        this.props.getInitialBody(poses[0])
+        //NOTE: will likely need to be a different pose than the 0th, after the user has been able to move into the proper position. This should be called by something that makes sure we can see all their body points at the same time
+      }
+      // }
+
       poses.forEach(({score, keypoints}) => {
         this.props.getKeypoints(keypoints)
+
         if (score >= minPoseConfidence) {
           if (showPoints) {
             drawKeyPoints(
@@ -236,13 +248,13 @@ class PoseNet extends Component {
   }
 
   render() {
+    console.log('initial body', this.props.initialBody)
     const loading = this.state.loading ? (
       <img className="loading" src="/assets/loading.gif" />
     ) : (
       <p className="noShow" />
     )
 
-    // const video = this.state.loading ? <div/> : <video id="videoNoShow" playsInline ref={this.getVideo} />
     const object = this.state.loading ? (
       <div />
     ) : (
@@ -252,7 +264,6 @@ class PoseNet extends Component {
         imageUrl={this.state.objectImage}
       />
     )
-    // const canvas = this.state.loading? <div/> : <canvas className="webcam" ref={this.getCanvas} />
 
     return (
       <div className="centered">
@@ -269,13 +280,18 @@ class PoseNet extends Component {
 
 const mapStateToProps = state => {
   return {
-    keypointsOnState: state.keypoints
+    keypointsOnState: state.keypoints,
+    intialBody: state.initialBody,
+    initialPoses: state.initialBody.length
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   getKeypoints: keypoints => {
     dispatch(gotKeypoints(keypoints))
+  },
+  getInitialBody: keypoints => {
+    dispatch(recordInitialBody(keypoints))
   }
 })
 
