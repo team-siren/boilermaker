@@ -7,6 +7,8 @@ class GameInit extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      count: 10,
+      timerRunning: false
       // localInitialBody: [], //<--leave these commented out
       // localProportions: {}  //<--they're just a reminder of state structure
     }

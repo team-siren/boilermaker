@@ -183,14 +183,15 @@ class PoseNet extends Component {
         canvasContext.restore()
       }
 
-      // function captureInitialBodyPosition(){
       //if no initialPose has been saved on state
-      if (this.props.initialPoses === 0) {
-        //dispatch the first pose into the state
-        this.props.getInitialBody(poses[0])
-        //NOTE: will likely need to be a different pose than the 0th, after the user has been able to move into the proper position. This should be called by something that makes sure we can see all their body points at the same time
-      }
-      // }
+      setTimeout(() => {
+        if (this.props.initialPoses === 0) {
+          //dispatch the first pose into the state
+          this.props.getInitialBody(poses[0])
+          //NOTE: will likely need to be a different pose than the 0th, after the user has been able to move into the proper position. This should be called by something that makes sure we can see all their body points at the same time
+          //update: testing with setTimeout
+        }
+      }, 10000) //10 second timer
 
       poses.forEach(({score, keypoints}) => {
         this.props.getKeypoints(keypoints)
