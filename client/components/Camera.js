@@ -13,8 +13,8 @@ import GameInit from './GameInit'
 
 class PoseNet extends Component {
   static defaultProps = {
-    videoWidth: 900,
-    videoHeight: 700,
+    videoWidth: 1300,
+    videoHeight: 800,
     flipHorizontal: true,
     algorithm: 'single-pose',
     showVideo: true,
@@ -83,15 +83,15 @@ class PoseNet extends Component {
     }
     const {videoWidth, videoHeight} = this.props
     const video = this.video
-    video.width = videoWidth
-    video.height = videoHeight
+    video.width = window.innerWidth //videoWidth
+    video.height = window.innerHeight //videoHeight
 
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
         facingMode: 'user',
-        width: videoWidth,
-        height: videoHeight
+        width: window.innerWidth, //videoWidth,
+        height: window.innerHeight //videoHeight
       }
     })
 
@@ -110,8 +110,8 @@ class PoseNet extends Component {
     const canvas = this.canvas
     const canvasContext = canvas.getContext('2d')
 
-    canvas.width = videoWidth
-    canvas.height = videoHeight
+    canvas.width = window.innerWidth //videoWidth
+    canvas.height = window.innerHeight //videoHeight
 
     this.poseDetectionFrame(canvasContext)
   }
@@ -175,13 +175,22 @@ class PoseNet extends Component {
         }
       }
 
-      canvasContext.clearRect(0, 0, videoWidth, videoHeight)
+      //canvasContext.clearRect(0, 0, videoWidth, videoHeight)
+      canvasContext.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
       if (showVideo) {
         canvasContext.save()
         canvasContext.scale(-1, 1)
-        canvasContext.translate(-videoWidth, 0)
-        canvasContext.drawImage(video, 0, 0, videoWidth, videoHeight)
+        // canvasContext.translate(-videoWidth, 0)
+        canvasContext.translate(-window.innerWidth, 0)
+        //canvasContext.drawImage(video, 0, 0, videoWidth, videoHeight)
+        canvasContext.drawImage(
+          video,
+          0,
+          0,
+          window.innerWidth,
+          window.innerHeight
+        )
         canvasContext.restore()
       }
 
@@ -242,33 +251,33 @@ class PoseNet extends Component {
               canvasContext
             )
           }
-          // const noseCords = findPoint('nose', keypoints)
-          // const objectCords = {x: this.props.ObjectX, y: this.props.ObjectY}
-
-          // if (
-          //   noseCords.x <= objectCords.x &&
-          //   noseCords.x >= objectCords.x - 50 &&
-          //   (noseCords.y <= objectCords.y && noseCords.y >= objectCords.y - 50)
-          // ) {
-          //   this.setState({
-          //     ...this.state,
-          //     objectImage: 'https://i.imgur.com/xhRjyzt.png'
-          //   })
-          // }
-
-          const handCords = findPoint('rightWrist', keypoints)
+          const noseCords = findPoint('nose', keypoints)
           const objectCords = {x: this.props.ObjectX, y: this.props.ObjectY}
 
           if (
-            handCords.x <= objectCords.x &&
-            handCords.x >= objectCords.x - 50 &&
-            (handCords.y <= objectCords.y && handCords.y >= objectCords.y - 50)
+            noseCords.x <= objectCords.x &&
+            noseCords.x >= objectCords.x - 50 &&
+            (noseCords.y <= objectCords.y && noseCords.y >= objectCords.y - 50)
           ) {
             this.setState({
               ...this.state,
               objectImage: 'https://i.imgur.com/xhRjyzt.png'
             })
           }
+
+          // const handCords = findPoint('rightWrist', keypoints)
+          // const objectCords = {x: this.props.ObjectX, y: this.props.ObjectY}
+
+          // if (
+          //   handCords.x <= objectCords.x &&
+          //   handCords.x >= objectCords.x - 50 &&
+          //   (handCords.y <= objectCords.y && handCords.y >= objectCords.y - 50)
+          // ) {
+          //   this.setState({
+          //     ...this.state,
+          //     objectImage: 'https://i.imgur.com/xhRjyzt.png'
+          //   })
+          // }
         }
       })
       requestAnimationFrame(poseDetectionFrameInner)
