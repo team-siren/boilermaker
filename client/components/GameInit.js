@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {bodyPointLocations} from './utils'
+import {bodyPointLocations, drawKeyPoints, drawSkeleton} from './utils'
 import {gotProportions} from '../store'
 
 class GameInit extends Component {

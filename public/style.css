@@ -140,8 +140,8 @@ form div {
 #bodyOutline {
   z-index: 7;
   position: fixed;
-  height: 78%;
-  top: 40px;
+  height: 80%;
+  top: 55px;
   left: 300px;
 
   /* fade out: */
