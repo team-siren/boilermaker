@@ -17,11 +17,10 @@ class GameInit extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    // console.log('scu: ', this.props.loading, nextProps.loading)
     return !!this.props.initialBody.score
   } /* equivalent to the ternary:
   `return this.props.initialBody.score ? false : true`
-  meaning: if the initialBody in the global store has a score (and thus keypoints) property, no need to update
+  meaning: if the initialBody in the global store has a score (and thus keypoints) property, no need to update. Otherwise, keep updating till it captures an initialBody
   */
 
   componentDidUpdate() {
@@ -74,33 +73,33 @@ class GameInit extends Component {
     const armLength =
       //shoulder to elbow
       Math.sqrt(
-        distanceBetween(leftShoulderCoords.x, leftShoulderCoords.x) *
-          distanceBetween(leftShoulderCoords.x, leftShoulderCoords.x) +
-          distanceBetween(leftElbowCoords.y, leftElbowCoords.y) *
-            distanceBetween(leftElbowCoords.y, leftElbowCoords.y)
+        distanceBetween(leftShoulderCoords.x, leftElbowCoords.x) *
+          distanceBetween(leftShoulderCoords.x, leftElbowCoords.x) +
+          distanceBetween(leftShoulderCoords.y, leftElbowCoords.y) *
+            distanceBetween(leftShoulderCoords.y, leftElbowCoords.y)
       ) +
       //+ elbow to wrist
       Math.sqrt(
-        distanceBetween(leftElbowCoords.x, leftElbowCoords.x) *
-          distanceBetween(leftElbowCoords.x, leftElbowCoords.x) +
-          distanceBetween(leftWristCoords.y, leftWristCoords.y) *
-            distanceBetween(leftWristCoords.y, leftWristCoords.y)
+        distanceBetween(leftElbowCoords.x, leftWristCoords.x) *
+          distanceBetween(leftElbowCoords.x, leftWristCoords.x) +
+          distanceBetween(leftElbowCoords.y, leftWristCoords.y) *
+            distanceBetween(leftElbowCoords.y, leftWristCoords.y)
       )
 
     const legLength =
       //hip to knee
       Math.sqrt(
-        distanceBetween(leftHipCoords.x, leftHipCoords.x) *
-          distanceBetween(leftHipCoords.x, leftHipCoords.x) +
-          distanceBetween(leftKneeCoords.y, leftKneeCoords.y) *
-            distanceBetween(leftKneeCoords.y, leftKneeCoords.y)
+        distanceBetween(leftHipCoords.x, leftKneeCoords.x) *
+          distanceBetween(leftHipCoords.x, leftKneeCoords.x) +
+          distanceBetween(leftHipCoords.y, leftKneeCoords.y) *
+            distanceBetween(leftHipCoords.y, leftKneeCoords.y)
       ) +
       //+ knee to ankle
       Math.sqrt(
-        distanceBetween(leftKneeCoords.x, leftKneeCoords.x) *
-          distanceBetween(leftKneeCoords.x, leftKneeCoords.x) +
-          distanceBetween(leftAnkleCoords.y, leftAnkleCoords.y) *
-            distanceBetween(leftAnkleCoords.y, leftAnkleCoords.y)
+        distanceBetween(leftKneeCoords.x, leftAnkleCoords.x) *
+          distanceBetween(leftKneeCoords.x, leftAnkleCoords.x) +
+          distanceBetween(leftKneeCoords.y, leftAnkleCoords.y) *
+            distanceBetween(leftKneeCoords.y, leftAnkleCoords.y)
       )
 
     const proportions = {
@@ -127,9 +126,9 @@ class GameInit extends Component {
     return (
       <div id="countdownDiv" className="centered">
         <img id="countdownGif" src="/assets/countdown.gif" />
-        <div id="bodyOutline" className="centered">
+        {/* <div id="bodyOutline" className="centered">
           <img src="/assets/bodyOutline.png" />
-        </div>
+        </div> */}
       </div>
     )
     // } else return <div/>

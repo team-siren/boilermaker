@@ -40,6 +40,8 @@ class PoseNet extends Component {
       objectImage: 'https://i.gifer.com/5DYJ.gif',
       posesRecorded: false
     }
+
+    this.variablesForRender = this.variablesForRender.bind(this)
   }
 
   getCanvas = elem => {
@@ -183,15 +185,41 @@ class PoseNet extends Component {
         canvasContext.restore()
       }
 
-      //if no initialPose has been saved on state
-      setTimeout(() => {
-        if (this.props.initialPoses === 0) {
-          //dispatch the first pose into the state
-          this.props.getInitialBody(poses[0])
-          //NOTE: will likely need to be a different pose than the 0th, after the user has been able to move into the proper position. This should be called by something that makes sure we can see all their body points at the same time
-          //update: testing with setTimeout
-        }
-      }, 10000) //10 second timer
+      // console.log('height?', !this.props.proportions.height) //IS EVENTUALLY FALSE!
+
+      //if no initial proportions have been saved on state
+      if (!this.props.proportions.height) {
+        setTimeout(() => {
+          if (
+            //if the left eye and left ankle are visible
+            poses[0].keypoints[1].score > minPartConfidence &&
+            poses[0].keypoints[15].score > minPartConfidence &&
+            !this.props.proportions.height //and there still aren't proportions
+          ) {
+            console.log('thanks! I can see you :)')
+            //dispatch the first pose into the state
+            this.props.getInitialBody(poses[0])
+          } else if (!this.props.proportions.height) {
+            //prompt user to move into frame
+            console.log('PLEASE MOVE YOUR WHOLE BODY IN THE FRAME')
+            // while(this.props.initialPoses === 0){ //<-can't use a while loop or it very quickly overloads chrome
+            // console.log('Move your WHOLE BODY into the frame!')
+            // setTimeout(()=>{
+            //   if ( //if the left eye and left ankle are visible
+            //     poses[0].keypoints[1].score > minPartConfidence &&
+            //     poses[0].keypoints[15].score > minPartConfidence
+            //   ){
+            //     this.props.getInitialBody(poses[0])
+            //     console.log('Ok NOW we got you!!!')
+            //   }
+            // }, 5000) //give em 5 more seconds?
+            // }
+          } else {
+            //anything we put inside here will run like 100ish times for some reason
+            // console.log('still no proportions...')
+          }
+        }, 12000) //12 second timer
+      } //NOTE: goal is recording the initial pose ONLY when all needed keypoints are in the frame
 
       poses.forEach(({score, keypoints}) => {
         this.props.getKeypoints(keypoints)
@@ -248,8 +276,7 @@ class PoseNet extends Component {
     poseDetectionFrameInner()
   }
 
-  render() {
-    // console.log('state', this.props.state)
+  variablesForRender() {
     const poseCapture = this.props.initialBody ? this.props.initialBody : []
 
     const loading = this.state.loading ? (
@@ -274,14 +301,61 @@ class PoseNet extends Component {
       <GameInit initialPoseCapture={poseCapture} loading={this.state.loading} />
     )
 
+    const getIntoTheFrame =
+      !this.props.proportions.height && !this.state.loading ? (
+        <img className="getIntoTheFrame" src="/assets/movePrompt.png" />
+      ) : (
+        <div className="getIntoTheFrame" />
+      )
+
+    const ready =
+      this.props.proportions.height && !this.state.loading ? (
+        <img id="ready" src="/assets/ready.png" />
+      ) : (
+        <div />
+      )
+
+    const proportions = this.props.proportions.height ? (
+      <h1 id="bodyMeasurements">
+        height: {this.props.proportions.height} <br />
+        arm length: {this.props.proportions.armLength} <br />
+        leg length: {this.props.proportions.legLength}
+      </h1>
+    ) : (
+      <div />
+    )
+
+    return {
+      loading,
+      object,
+      gameInit,
+      getIntoTheFrame,
+      ready,
+      proportions
+    }
+  }
+
+  render() {
+    const {
+      loading,
+      object,
+      gameInit,
+      getIntoTheFrame,
+      ready,
+      proportions
+    } = this.variablesForRender()
+
     return (
       <div className="centered">
         <div>{loading}</div>
         <div>
           <video id="videoNoShow" playsInline ref={this.getVideo} />
           {object}
+          {ready}
           {gameInit}
+          {getIntoTheFrame}
           <canvas className="webcam" ref={this.getCanvas} />
+          {proportions}
         </div>
       </div>
     )
@@ -291,8 +365,8 @@ class PoseNet extends Component {
 const mapStateToProps = state => {
   return {
     keypointsOnState: state.keypoints,
-    intialBody: state.initialBody,
-    initialPoses: state.initialBody.length,
+    initialBody: state.initialBody,
+    proportions: state.proportions,
     state: state
   }
 }
