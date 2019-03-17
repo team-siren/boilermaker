@@ -46,6 +46,7 @@ form div {
   margin-left: auto;
   margin-right: auto;
   padding: 6px;
+  z-index: -11;
 }
 
 #videoNoShow {
@@ -97,4 +98,60 @@ form div {
   /* align-content: center; */
   align-items: center;
   justify-content: center;
+}
+
+#countdownDiv {
+  z-index: 10;
+  position: fixed;
+  top: 100px;
+  left: 350px;
+
+  /* fade out: */
+  -moz-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Firefox */
+  -webkit-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Opera */
+  animation: cssAnimation 0s ease-in 13s forwards;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+@keyframes cssAnimation {
+  to {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+}
+@-webkit-keyframes cssAnimation {
+  to {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+  }
+}
+
+#countdownGif {
+  z-index: 11;
+}
+
+#bodyOutline {
+  z-index: 7;
+  position: fixed;
+  height: 78%;
+  top: 40px;
+  left: 300px;
+
+  /* fade out: */
+  -moz-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Firefox */
+  -webkit-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 0s ease-in 13s forwards;
+  /* Opera */
+  animation: cssAnimation 0s ease-in 13s forwards;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
 }

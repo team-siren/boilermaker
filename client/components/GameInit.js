@@ -7,8 +7,6 @@ class GameInit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      count: 10,
-      timerRunning: false
       // localInitialBody: [], //<--leave these commented out
       // localProportions: {}  //<--they're just a reminder of state structure
     }
@@ -19,6 +17,7 @@ class GameInit extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    // console.log('scu: ', this.props.loading, nextProps.loading)
     return !!this.props.initialBody.score
   } /* equivalent to the ternary:
   `return this.props.initialBody.score ? false : true`
@@ -123,7 +122,17 @@ class GameInit extends Component {
   }
 
   render() {
-    return <h1>'bla'</h1>
+    // console.log('loading in render:', this.props.loading)
+    // if (!this.props.loading){
+    return (
+      <div id="countdownDiv" className="centered">
+        <img id="countdownGif" src="/assets/countdown.gif" />
+        <div id="bodyOutline" className="centered">
+          <img src="/assets/bodyOutline.png" />
+        </div>
+      </div>
+    )
+    // } else return <div/>
   }
 }
 

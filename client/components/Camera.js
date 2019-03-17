@@ -268,14 +268,20 @@ class PoseNet extends Component {
       />
     )
 
+    const gameInit = this.state.loading ? (
+      <div />
+    ) : (
+      <GameInit initialPoseCapture={poseCapture} loading={this.state.loading} />
+    )
+
     return (
       <div className="centered">
         <div>{loading}</div>
         <div>
           <video id="videoNoShow" playsInline ref={this.getVideo} />
           {object}
+          {gameInit}
           <canvas className="webcam" ref={this.getCanvas} />
-          <GameInit initialPoseCapture={poseCapture} />
         </div>
       </div>
     )
