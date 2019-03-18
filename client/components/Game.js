@@ -11,8 +11,9 @@ class Game extends Component {
       height: this.props.height,
       keypoints: this.props.keypoints,
       imageUrl: 'https://i.gifer.com/5DYJ.gif',
-      ObjectX: 300,
-      ObjectY: 400
+      objCoords: {
+        x: 300,
+        y: 400
     }
   }
 
