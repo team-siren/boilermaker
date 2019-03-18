@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 
 class Object extends Component {
   constructor(props) {
@@ -46,4 +45,4 @@ class Object extends Component {
   }
 }
 
-export default connect(Object)
+export default Object
