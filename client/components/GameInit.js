@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {bodyPointLocations, drawKeyPoints, drawSkeleton} from './utils'
+import {bodyPointLocations, drawKeyPoints, drawSkeleton, findPoint} from './utils'
 import {gotProportions} from '../store'
 
 class GameInit extends Component {
@@ -39,22 +39,13 @@ class GameInit extends Component {
     this.setState({localInitialBody: initialKeypoints})
     //make the local initial body the keypoints array of the intial pose
 
-    const findCoords = bodyPart => {
-      let coords
-      if (initialKeypoints[bodyPointLocations[bodyPart]]) {
-        //e.g., find whatever is at the keypoint index indicated by the the index of the bodyPart given in the official utility list
-        coords = initialKeypoints[bodyPointLocations[bodyPart]].position
-      } //else coords = {x: 0, y: 0}
-      return coords
-    }
-
-    const leftEyeCoords = findCoords('leftEye')
-    const leftShoulderCoords = findCoords('leftShoulder')
-    const leftElbowCoords = findCoords('leftElbow')
-    const leftWristCoords = findCoords('leftWrist')
-    const leftHipCoords = findCoords('leftHip')
-    const leftKneeCoords = findCoords('leftKnee')
-    const leftAnkleCoords = findCoords('leftAnkle')
+    const leftEyeCoords = findPoint('leftEye', initialKeypoints)
+    const leftShoulderCoords = findPoint('leftShoulder', initialKeypoints)
+    const leftElbowCoords = findPoint('leftElbow', initialKeypoints)
+    const leftWristCoords = findPoint('leftWrist', initialKeypoints)
+    const leftHipCoords = findPoint('leftHip', initialKeypoints)
+    const leftKneeCoords = findPoint('leftKnee', initialKeypoints)
+    const leftAnkleCoords = findPoint('leftAnkle', initialKeypoints)
 
     const distanceBetween = (p1, p2) => Math.abs(p1 - p2)
 
@@ -64,42 +55,32 @@ class GameInit extends Component {
     const height =
       //eye to ankle
       Math.sqrt(
-        distanceBetween(leftEyeCoords.x, leftAnkleCoords.x) *
-          distanceBetween(leftEyeCoords.x, leftAnkleCoords.x) +
-          distanceBetween(leftEyeCoords.y, leftAnkleCoords.y) *
-            distanceBetween(leftEyeCoords.y, leftAnkleCoords.y)
+        Math.pow(distanceBetween(leftEyeCoords.x, leftAnkleCoords.x), 2) +
+        Math.pow(distanceBetween(leftEyeCoords.y, leftAnkleCoords.y), 2)
       )
 
     const armLength =
       //shoulder to elbow
       Math.sqrt(
-        distanceBetween(leftShoulderCoords.x, leftElbowCoords.x) *
-          distanceBetween(leftShoulderCoords.x, leftElbowCoords.x) +
-          distanceBetween(leftShoulderCoords.y, leftElbowCoords.y) *
-            distanceBetween(leftShoulderCoords.y, leftElbowCoords.y)
+        Math.pow(distanceBetween(leftShoulderCoords.x, leftElbowCoords.x), 2) +
+        Math.pow(distanceBetween(leftShoulderCoords.y, leftElbowCoords.y), 2)
       ) +
       //+ elbow to wrist
       Math.sqrt(
-        distanceBetween(leftElbowCoords.x, leftWristCoords.x) *
-          distanceBetween(leftElbowCoords.x, leftWristCoords.x) +
-          distanceBetween(leftElbowCoords.y, leftWristCoords.y) *
-            distanceBetween(leftElbowCoords.y, leftWristCoords.y)
+        Math.pow(distanceBetween(leftElbowCoords.x, leftWristCoords.x), 2) +
+        Math.pow(distanceBetween(leftElbowCoords.y, leftWristCoords.y), 2)
       )
 
     const legLength =
       //hip to knee
       Math.sqrt(
-        distanceBetween(leftHipCoords.x, leftKneeCoords.x) *
-          distanceBetween(leftHipCoords.x, leftKneeCoords.x) +
-          distanceBetween(leftHipCoords.y, leftKneeCoords.y) *
-            distanceBetween(leftHipCoords.y, leftKneeCoords.y)
+        Math.pow(distanceBetween(leftHipCoords.x, leftKneeCoords.x), 2) +
+        Math.pow(distanceBetween(leftHipCoords.y, leftKneeCoords.y), 2)
       ) +
       //+ knee to ankle
       Math.sqrt(
-        distanceBetween(leftKneeCoords.x, leftAnkleCoords.x) *
-          distanceBetween(leftKneeCoords.x, leftAnkleCoords.x) +
-          distanceBetween(leftKneeCoords.y, leftAnkleCoords.y) *
-            distanceBetween(leftKneeCoords.y, leftAnkleCoords.y)
+        Math.pow(distanceBetween(leftKneeCoords.x, leftAnkleCoords.x), 2) +
+        Math.pow(distanceBetween(leftKneeCoords.y, leftAnkleCoords.y), 2)
       )
 
     const proportions = {
