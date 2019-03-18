@@ -28,15 +28,17 @@ class PoseNet extends Component {
     skeletonColor: '#ffadea',
     skeletonLineWidth: 6,
     loadingText: 'Loading...please be patient...',
-    ObjectX: 300,
-    ObjectY: 400
+    ObjectX: 400,
+    ObjectY: 100,
+    ObjectWidth: 100
   }
 
   constructor(props) {
     super(props, PoseNet.defaultProps)
     this.state = {
       loading: true,
-      objectImage: 'https://i.gifer.com/5DYJ.gif'
+      objectImage:
+        'https://pbs.twimg.com/profile_images/846659478120366082/K-kZVvT8_400x400.jpg'
     }
   }
 
@@ -217,12 +219,24 @@ class PoseNet extends Component {
 
           const handCords = findPoint('rightWrist', keypoints)
           const objectCords = {x: this.props.ObjectX, y: this.props.ObjectY}
+          const ObjectWidth = this.props.ObjectWidth
+          const objectRadius = ObjectWidth * Math.sqrt(2) / 2
+          const objectCenterX =
+            Math.floor(Math.cos(Math.PI / 4) * objectRadius) + objectCords.x
+          const objectCenterY =
+            Math.floor(Math.sin(Math.PI / 4) * objectRadius) + objectCords.y
+          let distance = Math.sqrt(
+            Math.pow(handCords.x - objectCenterX, 2) +
+              Math.pow(handCords.y - objectCenterY, 2)
+          )
 
           if (
-            handCords.x <= objectCords.x &&
-            handCords.x >= objectCords.x - 50 &&
-            (handCords.y <= objectCords.y && handCords.y >= objectCords.y - 50)
+            objectRadius > distance
+            // handCords.x <= objectCords.x &&
+            // handCords.x >= objectCords.x - 50 &&
+            // (handCords.y <= objectCords.y && handCords.y >= objectCords.y - 50)
           ) {
+            console.log(handCords)
             this.setState({
               ...this.state,
               objectImage: 'https://i.imgur.com/xhRjyzt.png'
@@ -249,6 +263,7 @@ class PoseNet extends Component {
       <Object
         x={this.props.ObjectX}
         y={this.props.ObjectY}
+        width={this.props.ObjectWidth}
         imageUrl={this.state.objectImage}
       />
     )
