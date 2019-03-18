@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 
 // object coords in store so Game component can use
 class Object extends Component {
@@ -47,4 +46,4 @@ class Object extends Component {
   }
 }
 
-export default connect(Object)
+export default Object
