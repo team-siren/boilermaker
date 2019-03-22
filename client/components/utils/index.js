@@ -7,10 +7,10 @@ export const config = {
   flipHorizontal: true,
   algorithm: 'multi-pose',
   showVideo: true,
-  showSkeleton: false,
-  showPoints: false,
-  minPoseConfidence: 0.5,
-  minPartConfidence: 0.5,
+  showSkeleton: true,
+  showPoints: true,
+  minPoseConfidence: 0.3,
+  minPartConfidence: 0.3,
   maxPoseDetections: 2,
   nmsRadius: 20,
   outputStride: 32,
@@ -49,7 +49,7 @@ export const gameItems = [
     explodeUrl: '/assets/explodeRED.gif',
     active: true,
     x: 200,
-    y: 70,
+    y: 300,
     width: 150
   },
   {
@@ -71,7 +71,7 @@ export const gameItems = [
     explodeUrl: '/assets/explodePURPLE.gif',
     active: true,
     x: 900,
-    y: 100,
+    y: 300,
     width: 150
   },
   {
@@ -126,7 +126,7 @@ export const gameItems = [
     explodeUrl: '/assets/explodeRED.gif',
     active: true,
     x: 950,
-    y: 100,
+    y: 300,
     width: 150
   },
   {

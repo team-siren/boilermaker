@@ -13,7 +13,7 @@ import {
 const music = new Audio('/assets/CrystalIceArea.mp3')
 const winSound = new Audio('/assets/winSound.mp3')
 
-class Game extends Component {
+class KickGame extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -74,60 +74,24 @@ class Game extends Component {
         const itemCenterY =
           Math.floor(Math.sin(Math.PI / 4) * itemRadius) + itemCoords.y
 
-        const rightWristCoords = findPoint('rightWrist', this.props.keypoints)
-        const rightElbowCoords = findPoint('rightElbow', this.props.keypoints)
-        const yDiffR = rightWristCoords.y - rightElbowCoords.y
-        const xDiffR = rightWristCoords.x - rightElbowCoords.x
+        const rightAnkleCoords = findPoint('rightAnkle', this.props.keypoints)
+        const leftAnkleCoords = findPoint('leftAnkle', this.props.keypoints)
 
-        let angleR = Math.atan(Math.abs(yDiffR) / Math.abs(xDiffR))
-        if (yDiffR >= 0 && xDiffR <= 0) {
-          angleR = angleR + Math.PI / 2
-        }
-        if (xDiffR <= 0 && yDiffR < 0) {
-          angleR = angleR + Math.PI
-        }
-
-        let yDistanceR = Math.sin(angleR) * 50
-        let xDistanceR = Math.cos(angleR) * 50
-        let rightHandCoordY = yDistanceR + rightWristCoords.y
-        let rightHandCoordX = xDistanceR + rightWristCoords.x
-
-        let handToItemDistanceR = Math.sqrt(
-          Math.pow(rightHandCoordX - itemCenterX, 2) +
-            Math.pow(rightHandCoordY - itemCenterY, 2)
+        let footToItemDistanceR = Math.sqrt(
+          Math.pow(rightAnkleCoords.x - itemCenterX, 2) +
+            Math.pow(rightAnkleCoords.y - itemCenterY, 2)
         )
 
-        const leftWristCoords = findPoint('leftWrist', this.props.keypoints)
-        const leftElbowCoords = findPoint('leftElbow', this.props.keypoints)
-        const yDiffL = leftWristCoords.y - leftElbowCoords.y
-        const xDiffL = leftWristCoords.x - leftElbowCoords.x
-
-        let angleL = Math.atan(Math.abs(yDiffL) / Math.abs(xDiffL))
-        if (yDiffL >= 0 && xDiffL <= 0) {
-          angleL = angleL + Math.PI / 2
-        }
-        if (xDiffL <= 0 && yDiffL < 0) {
-          angleL = angleL + Math.PI
-        }
-        if (xDiffL > 0 && yDiffL < 0) {
-          angleL = angleL + 3 * Math.PI / 2
-        }
-
-        let yDistanceL = Math.sin(angleL) * 50
-        let xDistanceL = Math.cos(angleL) * 50
-        let leftHandCoordY = yDistanceL + leftWristCoords.y
-        let leftHandCoordX = xDistanceL + leftWristCoords.x
-
-        let handToItemDistanceL = Math.sqrt(
-          Math.pow(leftHandCoordX - itemCenterX, 2) +
-            Math.pow(leftHandCoordY - itemCenterY, 2)
+        let footToItemDistanceL = Math.sqrt(
+          Math.pow(leftAnkleCoords.x - itemCenterX, 2) +
+            Math.pow(leftAnkleCoords.y - itemCenterY, 2)
         )
 
         if (
           !this.state.won &&
           this.props.gameStarted &&
-          (itemRadius + 50 > handToItemDistanceL ||
-            itemRadius + 50 > handToItemDistanceR)
+          (itemRadius + 75 > footToItemDistanceL ||
+            itemRadius + 75 > footToItemDistanceR)
         ) {
           if (this.props.gameItems[i].active) {
             //explode the item
@@ -259,4 +223,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game)
+export default connect(mapStateToProps, mapDispatchToProps)(KickGame)
