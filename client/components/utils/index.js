@@ -249,10 +249,12 @@ export function generateRandomCoords(gameItem) {
   const rightShoulderCoords = findPoint('rightShoulder', keypoints)
   const leftShoulderCoords = findPoint('leftShoulder', keypoints)
 
+
   // set range to entire window
   let xCoordRange = Math.random() * (window.innerWidth - 150)
   const yCoordRange = Math.random() * (window.innerHeight - 150)
   // do not spawn within user's body (based off of shoulder coords)
+
   const forbiddenXRange =
     leftShoulderCoords.x + 50 - (rightShoulderCoords.x - 50)
 
