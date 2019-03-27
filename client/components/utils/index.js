@@ -294,29 +294,36 @@ export function shuffle(array) {
 
 export function calculateItemLocation(keypoints, gameItem) {
   const itemWidth = gameItem.width
+  //find wrist coords and hand coords
   const rightWristCoords = findPoint('rightWrist', keypoints)
   const leftWristCoords = findPoint('leftWrist', keypoints)
   const rightElbowCoords = findPoint('rightElbow', keypoints)
   const leftElbowCoords = findPoint('leftElbow', keypoints)
 
+  //item coords correspond to upper left corner of image
   let itemCoords = {
     x: gameItem.x,
     y: gameItem.y
   }
 
   // item location window
+  //item radius is distance from corner of item to center
+  //assumes that items are squares thus the diagonal is x√2 so radius is half
   const itemRadius = itemWidth * Math.sqrt(2) / 2
-  const itemCenterX =
-    Math.floor(Math.cos(Math.PI / 4) * itemRadius) + itemCoords.x
-  const itemCenterY =
-    Math.floor(Math.sin(Math.PI / 4) * itemRadius) + itemCoords.y
+  //corner of item to center in square is 45 degree angle( pi/4). cos of angle times radius(hypotenuse) gives x distance from corner to center
+  //add corner x coord to get x coord of item center
+  const itemCenterX = Math.cos(Math.PI / 4) * itemRadius + itemCoords.x
+  //sin of angle times radius(hypotenuse) gives y distance from corner to center. In screen coordinate system y increases as you go down the page
+  //therefore use positive pi/4 for angle instead of negative.
+  const itemCenterY = Math.sin(Math.PI / 4) * itemRadius + itemCoords.y
 
   const yDiffR = rightWristCoords.y - rightElbowCoords.y
   const xDiffR = rightWristCoords.x - rightElbowCoords.x
 
   let angleR = Math.atan(Math.abs(yDiffR) / Math.abs(xDiffR))
   if (yDiffR >= 0 && xDiffR <= 0) angleR = angleR + Math.PI / 2
-  if (xDiffR <= 0 && yDiffR < 0) angleR = angleR + Math.PI
+  if (yDiffR < 0 && xDiffR <= 0) angleR = angleR + Math.PI
+  if (yDiffR < 0 && xDiffR > 0) angleR = angleR + 3 * Math.PI / 2
 
   let yDistanceR = Math.sin(angleR) * 50
   let xDistanceR = Math.cos(angleR) * 50
