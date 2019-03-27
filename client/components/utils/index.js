@@ -252,7 +252,7 @@ export function generateRandomCoords(gameItem) {
   // set range to entire window
   let xCoordRange = Math.random() * (window.innerWidth - 150)
   const yCoordRange = Math.random() * (window.innerHeight - 150)
-  
+
   // do not spawn within user's body (based off of shoulder coords)
   const forbiddenXRange =
     leftShoulderCoords.x + 50 - (rightShoulderCoords.x - 50)
@@ -265,8 +265,7 @@ export function generateRandomCoords(gameItem) {
     if (spawnOnRightSide) {
       xCoordRange += forbiddenXRange
       // prevents x coord from setting outside window
-      if (xCoordRange > window.innderWidth - 150)
-        xCoordRange = window.innerWidth - 150
+      if (xCoordRange > window.innderWidth - 150) xCoordRange = window.innerWidth - 150
     } else if (!spawnOnRightSide) {
       xCoordRange -= forbiddenXRange
       if (xCoordRange < 0) xCoordRange = 0
@@ -406,19 +405,16 @@ export function finishGame(
   music,
   stopTimerFunc,
   winSound,
-  gameItems,
+  gameItemsArray,
   explodeFunc,
-  squish,
-  score,
-  getFinalScore
+  squish
 ) {
   music.pause()
   stopTimerFunc()
   winSound.play()
-  for (let i = 0; i < gameItems.length; i++) explodeFunc(gameItems[i])
+  for (let i = 0; i < gameItemsArray.length; i++) explodeFunc(gameItemsArray[i])
   squish.play()
   squish.play()
-  // getFinalScore(score)
 }
 
 import {Link} from 'react-router-dom'
