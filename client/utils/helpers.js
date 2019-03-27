@@ -152,7 +152,7 @@ export function hitSequence(gameItem, sound, explodeFunc, removeFunc) {
 }
 
 // Game 1 & 2
-export function winGame(
+export function finishGame(
   music,
   stopTimerFunc,
   winSound,
@@ -168,7 +168,7 @@ export function winGame(
   for (let i = 0; i < gameItems.length; i++) explodeFunc(gameItems[i])
   squish.play()
   squish.play()
-  getFinalScore(score)
+  // getFinalScore(score)
 }
 
 // Game 3
