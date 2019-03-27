@@ -240,7 +240,7 @@ export const variablesForCameraRender = loadingStatus => {
 }
 
 // spawn coordinates for game items
-import store from '../store'
+import store from '../../store'
 export function generateRandomCoords(gameItem) {
   let state = store.getState()
   const keypoints = state.keypoints
