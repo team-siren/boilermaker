@@ -317,37 +317,60 @@ export function calculateItemLocation(keypoints, gameItem) {
   //therefore use positive pi/4 for angle instead of negative.
   const itemCenterY = Math.sin(Math.PI / 4) * itemRadius + itemCoords.y
 
+  //CREATE RIGHT HAND POINT BASED ON ANGLE BETWEEN RIGHT ELBOW AND RIGHT WRIST
+  //distance between wrist and elbow
   const yDiffR = rightWristCoords.y - rightElbowCoords.y
   const xDiffR = rightWristCoords.x - rightElbowCoords.x
 
+  //angle between wrist and elbow
+  //correct angle for arm down and to your right
   let angleR = Math.atan(Math.abs(yDiffR) / Math.abs(xDiffR))
-  if (yDiffR >= 0 && xDiffR <= 0) angleR = angleR + Math.PI / 2
-  if (yDiffR < 0 && xDiffR <= 0) angleR = angleR + Math.PI
-  if (yDiffR < 0 && xDiffR > 0) angleR = angleR + 3 * Math.PI / 2
 
+  //correct angle for arm down and to your left
+  if (yDiffR >= 0 && xDiffR <= 0) angleR = Math.PI - angleR
+  //correct angle for arm up and to your left
+  if (yDiffR < 0 && xDiffR <= 0) angleR = angleR + Math.PI
+  //correct angle for arm up and to your right
+  if (yDiffR < 0 && xDiffR > 0) angleR = 2 * Math.PI - angleR
+
+  //y distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let yDistanceR = Math.sin(angleR) * 50
+  //x distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let xDistanceR = Math.cos(angleR) * 50
+  //created a point in middle of hand
   let rightHandCoordY = yDistanceR + rightWristCoords.y
   let rightHandCoordX = xDistanceR + rightWristCoords.x
 
+  //distance between new hand point and center of item
   let handToItemDistanceR = Math.sqrt(
     Math.pow(rightHandCoordX - itemCenterX, 2) +
       Math.pow(rightHandCoordY - itemCenterY, 2)
   )
 
+  //CREATE LEFT HAND POINT BASED ON ANGLE BETWEEN LEFT ELBOW AND LEFT WRIST
+  //distance between wrist and elbow
   const yDiffL = leftWristCoords.y - leftElbowCoords.y
   const xDiffL = leftWristCoords.x - leftElbowCoords.x
 
+  //angle between wrist and elbow
+  //correct angle for arm down and to your right
   let angleL = Math.atan(Math.abs(yDiffL) / Math.abs(xDiffL))
-  if (yDiffL >= 0 && xDiffL <= 0) angleL = angleL + Math.PI / 2
-  if (xDiffL <= 0 && yDiffL < 0) angleL = angleL + Math.PI
-  if (xDiffL > 0 && yDiffL < 0) angleL = angleL + 3 * Math.PI / 2
+  //correct angle for arm down and to your left
+  if (yDiffL >= 0 && xDiffL <= 0) angleL = Math.PI - angleL
+  //correct angle for arm up and to your left
+  if (yDiffL < 0 && xDiffL <= 0) angleL = angleL + Math.PI
+  //correct angle for arm up and to your right
+  if (yDiffL < 0 && xDiffL > 0) angleL = 2 * Math.PI - angleL
 
+  //y distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let yDistanceL = Math.sin(angleL) * 50
+  //x distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let xDistanceL = Math.cos(angleL) * 50
+  //created a point in middle of hand
   let leftHandCoordY = yDistanceL + leftWristCoords.y
   let leftHandCoordX = xDistanceL + leftWristCoords.x
 
+  //distance between new hand point and center of item
   let handToItemDistanceL = Math.sqrt(
     Math.pow(leftHandCoordX - itemCenterX, 2) +
       Math.pow(leftHandCoordY - itemCenterY, 2)
