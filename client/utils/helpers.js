@@ -63,10 +63,10 @@ export function generateRandomCoords(gameItem) {
   // set range to entire window
   let xCoordRange = Math.random() * (window.innerWidth - 150)
   const yCoordRange = Math.random() * (window.innerHeight - 150)
+
   // do not spawn within user's body (based off of shoulder coords)
   const forbiddenXRange =
     leftShoulderCoords.x + 50 - (rightShoulderCoords.x - 50)
-
   // if x coordinate lands within forbidden range
   let spawnOnRightSide = true
   if (
@@ -75,6 +75,7 @@ export function generateRandomCoords(gameItem) {
   ) {
     if (spawnOnRightSide) {
       xCoordRange += forbiddenXRange
+      // prevents x coord from setting outside window
       if (xCoordRange > window.innderWidth - 150)
         xCoordRange = window.innerWidth - 150
     } else if (!spawnOnRightSide) {
@@ -97,58 +98,83 @@ export function generateRandomCoords(gameItem) {
 
 export function calculateItemLocation(keypoints, gameItem) {
   const itemWidth = gameItem.width
+  //find wrist coords and hand coords
   const rightWristCoords = findPoint('rightWrist', keypoints)
   const leftWristCoords = findPoint('leftWrist', keypoints)
   const rightElbowCoords = findPoint('rightElbow', keypoints)
   const leftElbowCoords = findPoint('leftElbow', keypoints)
 
+  //item coords correspond to upper left corner of image
   let itemCoords = {
     x: gameItem.x,
     y: gameItem.y
   }
 
   // item location window
+  //item radius is distance from corner of item to center
+  //assumes that items are squares thus the diagonal is x√2 so radius is half
   const itemRadius = itemWidth * Math.sqrt(2) / 2
-  const itemCenterX =
-    Math.floor(Math.cos(Math.PI / 4) * itemRadius) + itemCoords.x
-  const itemCenterY =
-    Math.floor(Math.sin(Math.PI / 4) * itemRadius) + itemCoords.y
+  //corner of item to center in square is 45 degree angle( pi/4). cos of angle times radius(hypotenuse) gives x distance from corner to center
+  //add corner x coord to get x coord of item center
+  const itemCenterX = Math.cos(Math.PI / 4) * itemRadius + itemCoords.x
+  //sin of angle times radius(hypotenuse) gives y distance from corner to center. In screen coordinate system y increases as you go down the page
+  //therefore use positive pi/4 for angle instead of negative.
+  const itemCenterY = Math.sin(Math.PI / 4) * itemRadius + itemCoords.y
 
+  //CREATE RIGHT HAND POINT BASED ON ANGLE BETWEEN RIGHT ELBOW AND RIGHT WRIST
+  //distance between wrist and elbow
   const yDiffR = rightWristCoords.y - rightElbowCoords.y
   const xDiffR = rightWristCoords.x - rightElbowCoords.x
 
+  //angle between wrist and elbow
+  //correct angle for arm down and to your right
   let angleR = Math.atan(Math.abs(yDiffR) / Math.abs(xDiffR))
+
+  //correct angle for arm down and to your left
   if (yDiffR >= 0 && xDiffR <= 0) angleR = Math.PI - angleR
   //correct angle for arm up and to your left
   if (yDiffR < 0 && xDiffR <= 0) angleR = angleR + Math.PI
   //correct angle for arm up and to your right
   if (yDiffR < 0 && xDiffR > 0) angleR = 2 * Math.PI - angleR
 
+  //y distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let yDistanceR = Math.sin(angleR) * 50
+  //x distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let xDistanceR = Math.cos(angleR) * 50
+  //created a point in middle of hand
   let rightHandCoordY = yDistanceR + rightWristCoords.y
   let rightHandCoordX = xDistanceR + rightWristCoords.x
 
+  //distance between new hand point and center of item
   let handToItemDistanceR = Math.sqrt(
     Math.pow(rightHandCoordX - itemCenterX, 2) +
       Math.pow(rightHandCoordY - itemCenterY, 2)
   )
 
+  //CREATE LEFT HAND POINT BASED ON ANGLE BETWEEN LEFT ELBOW AND LEFT WRIST
+  //distance between wrist and elbow
   const yDiffL = leftWristCoords.y - leftElbowCoords.y
   const xDiffL = leftWristCoords.x - leftElbowCoords.x
 
+  //angle between wrist and elbow
+  //correct angle for arm down and to your right
   let angleL = Math.atan(Math.abs(yDiffL) / Math.abs(xDiffL))
+  //correct angle for arm down and to your left
   if (yDiffL >= 0 && xDiffL <= 0) angleL = Math.PI - angleL
   //correct angle for arm up and to your left
   if (yDiffL < 0 && xDiffL <= 0) angleL = angleL + Math.PI
   //correct angle for arm up and to your right
   if (yDiffL < 0 && xDiffL > 0) angleL = 2 * Math.PI - angleL
 
+  //y distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let yDistanceL = Math.sin(angleL) * 50
+  //x distance from wrist point to new "hand point", 50 pixels is hypoteneus or radius of imaginary circle
   let xDistanceL = Math.cos(angleL) * 50
+  //created a point in middle of hand
   let leftHandCoordY = yDistanceL + leftWristCoords.y
   let leftHandCoordX = xDistanceL + leftWristCoords.x
 
+  //distance between new hand point and center of item
   let handToItemDistanceL = Math.sqrt(
     Math.pow(leftHandCoordX - itemCenterX, 2) +
       Math.pow(leftHandCoordY - itemCenterY, 2)
