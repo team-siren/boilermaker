@@ -41,7 +41,6 @@ class Game extends Component {
   }
 
   componentDidMount() {
-
     music.volume = 0.5
     if (!this.state.musicPlaying) music.play()
 

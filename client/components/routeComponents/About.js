@@ -3,19 +3,19 @@ import {Link} from 'react-router-dom'
 import {Link as ScrollLink} from 'react-scroll'
 
 const About = () => {
-  const buttonSound = new Audio('/assets/buttonPress.mp3')
-  const hoverSound = new Audio('/assets/buttonHover.mp3')
+  const buttonSound = new Audio('/assets/audio/buttonPress.mp3')
+  const hoverSound = new Audio('/assets/audio/buttonHover.mp3')
   return (
     <div className="center aboutPage">
       <iframe
-        src="/assets/silence.mp3"
+        src="/assets/audio/silence.mp3"
         allow="autoplay"
         style={{display: 'none'}}
         id="iframeAudio"
       />
       <audio loop="loop" autoPlay="autoplay">
         <source
-          src="/assets/theWonderfulStarsWalkIsWonderful.mp3"
+          src="/assets/audio/theWonderfulStarsWalkIsWonderful.mp3"
           type="audio/mpeg"
           volume="0.1"
         />
@@ -126,7 +126,7 @@ const About = () => {
             <img
               className="homeButton"
               id="aboutHomeButton"
-              src="/assets/homeButton.png"
+              src="/assets/buttons/homeButton.png"
               onMouseEnter={() => hoverSound.play()}
               onClick={() => buttonSound.play()}
             />
