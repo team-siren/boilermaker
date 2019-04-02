@@ -3456,6 +3456,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.findPoint = findPoint;
 exports.generateRandomCoords = generateRandomCoords;
 exports.calculateItemLocation = calculateItemLocation;
+exports.shuffle = shuffle;
 exports.hitSequence = hitSequence;
 exports.finishGame = finishGame;
 exports.pauseMenuDiv = exports.variablesForCameraRender = exports.bodyPointLocations = void 0;
@@ -3635,6 +3636,24 @@ function calculateItemLocation(keypoints, gameItem) {
     handToItemDistanceL: handToItemDistanceL,
     handToItemDistanceR: handToItemDistanceR
   };
+} // shuffles riskeyGameItems so bombs aren't added right after each other on level increase
+
+
+function shuffle(array) {
+  var newArray = array.slice();
+  var currentIndex = newArray.length;
+  var tempValue;
+  var randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    tempValue = newArray[currentIndex];
+    newArray[currentIndex] = newArray[randomIndex];
+    newArray[randomIndex] = tempValue;
+  }
+
+  return newArray;
 } // when a user's body point enters item location window range
 
 

@@ -187,6 +187,25 @@ export function calculateItemLocation(keypoints, gameItem) {
   }
 }
 
+// shuffles riskeyGameItems so bombs aren't added right after each other on level increase
+export function shuffle(array) {
+  const newArray = array.slice()
+  let currentIndex = newArray.length
+  let tempValue
+  let randomIndex
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    tempValue = newArray[currentIndex]
+    newArray[currentIndex] = newArray[randomIndex]
+    newArray[randomIndex] = tempValue
+  }
+
+  return newArray
+}
+
 // when a user's body point enters item location window range
 export function hitSequence(gameItem, sound, explodeFunc, removeFunc) {
   if (gameItem.type !== 'bomb') {
