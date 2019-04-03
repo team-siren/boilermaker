@@ -69,13 +69,25 @@ const startListening = () => {
 const syncDb = () => db.sync()
 
 async function bootApp() {
-  await syncDb()
-  await createApp()
+  try {
+    await syncDb()
+  } catch (error) {
+    console.error('FAILED TO SYNC DB', error)
+  }
+  try {
+    await createApp()
+  } catch (error) {
+    console.error('FAILED TO CREATE APP MIDDLEWARE', error)
+  }
   await startListening()
 }
 
 if (require.main === module) {
-  bootApp()
+  try {
+    bootApp()
+  } catch (error) {
+    console.error(error)
+  }
 } else {
   createApp()
 }
