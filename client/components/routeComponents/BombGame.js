@@ -1,7 +1,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
 import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {RenderPlayBombGame, YouDied} from './index'
 import {calculateItemLocation, hitSequence} from '../../utils'
@@ -136,8 +135,7 @@ class BombGame extends Component {
 
               this.setState({
                 metGameOverCondition: true,
-                gameOver: true,
-                level: 1
+                gameOver: true
               })
               music.pause()
               this.stopTimer()
