@@ -187,7 +187,7 @@ export function calculateItemLocation(keypoints, gameItem) {
   }
 }
 
-// shuffles riskeyGameItems so bombs aren't added right after each other on level increase
+// shuffles riskyGameItems so bombs aren't added right after each other on level increase
 export function shuffle(array) {
   const newArray = array.slice()
   let currentIndex = newArray.length
