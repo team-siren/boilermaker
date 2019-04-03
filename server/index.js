@@ -22,12 +22,12 @@ const createApp = () => {
   app.use(compression())
 
   //redirect the visitor to the secure version of the site (most browsers block camera access from non-secure urls)
-  app.use((req, res, next) => {
-    if (process.env.NODE_ENV === 'production' && !req.secure) {
-      return res.redirect('https://' + req.headers.host + req.path)
-    }
-    next()
-  })
+  // app.use((req, res, next) => {
+  //   if (process.env.NODE_ENV === 'production' && !req.secure) {
+  //     return res.redirect('https://' + req.headers.host + req.path)
+  //   }
+  //   next()
+  // })
 
   // api routes
   app.use('/api', require('./routes'))
