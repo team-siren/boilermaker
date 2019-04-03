@@ -1,6 +1,6 @@
-const ClockLeaderboard = require('./clockLeaderboard')
-const NormalLeaderboard = require('./normalLeaderboard')
-const BombLeaderboard = require('./bombLeaderboard')
+const ClockLeaderboard = require('./clockLeaderboardModel')
+const NormalLeaderboard = require('./normalLeaderboardModel')
+const BombLeaderboard = require('./bombLeaderboardModel')
 
 module.exports = {
   ClockLeaderboard,
